@@ -8,7 +8,7 @@ Arduino wrapper around Espressif's official [esp-mqtt](https://docs.espressif.co
 ## Installation
 1. Download the latest [ZIP release](https://github.com/junzzhu/esp-mqtt-arduino/releases).
 2. In Arduino IDE: `Sketch > Include Library > Add .ZIP Library`.
-3. Select the downloaded zip.
+3. Select the downloaded ZIP file.
 
 ## Basic Usage
 The following example demonstrates the recommended event-driven approach. The client is configured with callbacks, and all logic for subscriptions and message handling resides within them, keeping the main `loop()` clean.
@@ -70,5 +70,22 @@ void loop() {
 }
 ```
 
+In the Arduino IDE Serial Monitor, you should see output similar to the following:
+
+```
+Received message on topic: demo/mqtt5 => Hello from Arduino MQTT5 ESP32!
+...
+```
+
+With the Mosquitto client, subscribe to the topic to monitor the message:
+
+> mosquitto_sub -h test.mosquitto.org -p 1883 -t demo/mqtt5
+
+
+
 ## TLS example
 If you need to talk to the encrypted, but unauthenticated, Mosquitto test broker on port 8883, start with the sketch in [`examples/BasicMqtt5_cert/BasicMqtt5_cert.ino`](examples/BasicMqtt5_cert/BasicMqtt5_cert.ino). It includes the `mosquitto.org` root certificate and optional flags for looser verification.
+
+## Enabling MQTT v5 in Arduino Core
+
+The prebuilt ESP32 packages installed through Boards Manager keep MQTT v5 disabled, so you must rebuild the `esp32-arduino-libs` bundle yourself before exploring MQTT v5 features. After recompiling any sketch, open the newest directory under `~/.cache/arduino/sketches/` and inspect `sdkconfig`; you should see `CONFIG_MQTT_PROTOCOL_5=y`.
